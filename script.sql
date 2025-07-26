@@ -1,0 +1,79 @@
+-- Create database
+CREATE DATABASE IF NOT EXISTS ride;
+USE ride;
+
+-- Drop tables if they already exist
+DROP TABLE IF EXISTS booking;
+DROP TABLE IF EXISTS vehicles;
+DROP TABLE IF EXISTS users;
+
+-- Create Users Table
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(100) NOT NULL
+);
+
+-- Create Vehicles Table (battery_capacity used)
+CREATE TABLE vehicles (
+  vehicle_id INT NOT NULL AUTO_INCREMENT,
+  vehicle_type VARCHAR(20) NOT NULL, -- e.g., Car, Scooter
+  name VARCHAR(100) NOT NULL,
+  model VARCHAR(100) NOT NULL,
+  battery_capacity VARCHAR(20) NOT NULL,
+  number VARCHAR(50) NOT NULL UNIQUE,
+  rent_type VARCHAR(50) NOT NULL,
+  rent_amount DECIMAL(10,2) NOT NULL,
+  images VARCHAR(300),
+  company VARCHAR(100),
+  PRIMARY KEY (vehicle_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ALTER TABLE vehicles DROP COLUMN rent_type;
+ALTER TABLE vehicles DROP INDEX number;
+
+-- Create Booking Table
+CREATE TABLE booking (
+  booking_id INT NOT NULL AUTO_INCREMENT,
+  vehicle_id INT NOT NULL,
+  vehicle_type VARCHAR(20) NOT NULL,
+  vehicle_name VARCHAR(100) NOT NULL,
+  vehicle_company VARCHAR(100) NOT NULL,
+  vehicle_model VARCHAR(100) NOT NULL,
+  vehicle_number VARCHAR(50) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  mobile VARCHAR(15) NOT NULL,
+  pickup_date DATE NOT NULL,
+  drop_date DATE NOT NULL,
+  pickup_time TIME NOT NULL,
+  drop_time TIME NOT NULL,
+  pickup_location VARCHAR(200) NOT NULL,
+  drop_location VARCHAR(200) NOT NULL,
+  total_cost DECIMAL(10,2) NOT NULL,
+  document VARCHAR(300),
+  booking_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (booking_id),
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(vehicle_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ✅ No need to rename column here again, it's correct in CREATE TABLE
+-- ALTER TABLE vehicles CHANGE COLUMN batteryCapacity battery_capacity VARCHAR(20) NOT NULL;
+
+
+
+
+SHOW TABLES;
+
+ALTER TABLE vehicles DROP COLUMN rent_type;
+SELECT COUNT(*) AS totalUsers FROM users;
+SELECT COUNT(*) AS totalVehicles FROM vehicles;
+SELECT * FROM users;
+SELECT * FROM vehicles;
+SELECT * FROM booking;
+
+SELECT number FROM vehicles;
+SHOW CREATE TABLE vehicles;
+ALTER TABLE vehicles DROP INDEX vehicles_number_unique;
+SHOW INDEXES FROM vehicles;
+
+

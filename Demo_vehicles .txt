@@ -1,0 +1,28 @@
+
+| Type | Name                  | Company                  | Model      | Battery Capacity | Number     | Rent Amount (₹/hr) |
+| ---- | --------------------- | ------------------------ | ---------- | ---------------- | ---------- | ------------------ |
+| Bike | Ather 450X            | Ather Energy             | 450X       | 3.7 kWh          | KA28AA4501 | ₹44                |
+| Bike | TVS iQube             | TVS Motor Company        | iQube      | 3.04 kWh         | KA28BB4502 | ₹38                |
+| Bike | Revolt RV400          | Revolt Motors            | RV400      | 3.24 kWh         | KA28CC4503 | ₹40                |
+| Bike | Okinawa PraisePro     | Okinawa Autotech         | PraisePro  | 2.0 kWh          | KA28DD4504 | ₹35                |
+| Bike | Bajaj Chetak Electric | Bajaj Auto               | Chetak     | 3.0 kWh          | KA28EE4505 | ₹43                |
+| Bike | Hero Electric Optima  | Hero Electric            | Optima     | 1.5 kWh          | KA28FF4506 | ₹31                |
+| Bike | Simple One            | Simple Energy            | One        | 5.0 kWh          | KA28GG4507 | ₹46                |
+| Bike | Ultraviolette F77     | Ultraviolette Automotive | F77        | 10.3 kWh         | KA28HH4508 | ₹63                |
+| Bike | Benling Aura          | Benling India            | Aura       | 2.88 kWh         | KA28II4509 | ₹34                |
+| Bike | Ampere Magnus Pro     | Ampere Vehicles          | Magnus Pro | 1.8 kWh          | KA28JJ4510 | ₹33                |
+
+
+
+| Type | Name                  | Company           | Model         | Battery Capacity | Number     | Rent Amount (₹/hr) |
+| ---- | --------------------- | ----------------- | ------------- | ---------------- | ---------- | ------------------ |
+| Car  | Tata Nexon EV         | Tata Motors       | Nexon EV      | 40.5 kWh         | KA28AA1001 | ₹150               |
+| Car  | MG ZS EV              | MG Motor          | ZS EV         | 50.3 kWh         | KA28BB1002 | ₹188               |
+| Car  | Hyundai Kona Electric | Hyundai           | Kona Electric | 39.2 kWh         | KA28CC1003 | ₹175               |
+| Car  | Mahindra e2o Plus     | Mahindra Electric | e2o Plus      | 15.0 kWh         | KA28DD1004 | ₹113               |
+| Car  | Tata Tigor EV         | Tata Motors       | Tigor EV      | 26.0 kWh         | KA28EE1005 | ₹125               |
+| Car  | Audi e-tron           | Audi              | e-tron        | 95.0 kWh         | KA28FF1006 | ₹438               |
+| Car  | Mercedes-Benz EQC     | Mercedes-Benz     | EQC           | 80.0 kWh         | KA28GG1007 | ₹400               |
+| Car  | BMW i3                | BMW               | i3            | 42.2 kWh         | KA28HH1008 | ₹313               |
+| Car  | Jaguar I-PACE         | Jaguar            | I-PACE        | 90.0 kWh         | KA28II1009 | ₹375               |
+| Car  | Porsche Taycan        | Porsche           | Taycan        | 93.4 kWh         | KA28JJ1010 | ₹500               |
