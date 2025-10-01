@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const db = require("./db");
 const adminStatsRoute = require("./routes/adminStats");
 const nodemailer = require("nodemailer");
+const PDFDocument = require("pdfkit");
 const router = express.Router(); // Define the router
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -32,6 +33,96 @@ const sendWelcomeEmail = (email, name) => {
 
   return transporter.sendMail(mailOptions);
 };
+
+// Helper to generate PDF as a buffer
+function generateReceiptPDF(receiptData) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument();
+    const buffers = [];
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', () => {
+      const pdfData = Buffer.concat(buffers);
+      resolve(pdfData);
+    });
+
+    // Title
+    doc.fontSize(24).fillColor('#0d47a1').text('Apna Gadi Booking Receipt', { align: 'center', underline: true });
+    doc.moveDown();
+
+    // Booking details
+    doc.fontSize(13).fillColor('black');
+    doc.text(`Name: ${receiptData.name}`);
+    doc.text(`Mobile: ${receiptData.mobile}`);
+    doc.text(`Vehicle: ${receiptData.vehicle}`);
+    doc.text(`Pickup Date: ${receiptData.pickup_date}`);
+    doc.text(`Drop Date: ${receiptData.drop_date}`);
+    doc.text(`Pickup Time: ${receiptData.pickup_time}`);
+    doc.text(`Drop Time: ${receiptData.drop_time}`);
+    doc.text(`Total Cost: Rs. ${receiptData.total_cost}`);
+    doc.moveDown();
+
+    // Main message - colorful and attractive
+    doc.fontSize(16).fillColor('#388e3c').text('Booking Successful!', { align: 'center', underline: true });
+    doc.moveDown(0.5);
+
+    doc.fontSize(12).fillColor('#1565c0').text(
+      "Thank you for choosing Apna Gadi – where every ride is a new adventure!",
+      { align: 'center' }
+    );
+    doc.moveDown(0.5);
+
+    doc.fontSize(12).fillColor('#6d4c41').text(
+      "We hope you have a smooth and joyful journey. If you loved our service, tell your friends (and even your rivals – everyone deserves a great ride!).",
+      { align: 'center' }
+    );
+    doc.moveDown(0.5);
+
+    doc.fontSize(12).fillColor('#ad1457').text(
+      "Need another ride? We're always here for you. Book again anytime and let the good times roll!",
+      { align: 'center' }
+    );
+    doc.moveDown(0.5);
+
+    doc.fontSize(12).fillColor('#00838f').text(
+      "If you have any questions, our support team is ready 24/7. Just reply to this email or call us anytime.",
+      { align: 'center' }
+    );
+    doc.moveDown(0.5);
+
+    doc.fontSize(12).fillColor('#2e7d32').text(
+      "Drive safe, stay awesome, and remember: Life is too short for boring rides!",
+      { align: 'center' }
+    );
+    doc.moveDown(1);
+
+    doc.fontSize(13).fillColor('#0d47a1').text(
+      "With gratitude,\nTeam Apna Gadi",
+      { align: 'center', oblique: true }
+    );
+
+    doc.end();
+  });
+}
+
+async function sendBookingEmail(to, receiptData) {
+  const pdfBuffer = await generateReceiptPDF(receiptData);
+
+  const mailOptions = {
+    from: '"Apna Gadi" <k2kunalkhude@gmail.com>',
+    to,
+    subject: 'Booking Confirmation - Apna Gadi',
+    text: `Dear ${receiptData.name},\n\nYour booking was successful! Please find your receipt attached.\n\nThank you for choosing Apna Gadi.`,
+    attachments: [
+      {
+        filename: 'booking_receipt.pdf',
+        content: pdfBuffer,
+        contentType: 'application/pdf'
+      }
+    ]
+  };
+
+  return transporter.sendMail(mailOptions);
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -140,8 +231,15 @@ app.use("/", router);
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  kunalBanner(PORT);
 });
+
+function kunalBanner(port) {
+  console.log("Server is running on http://localhost:" + port);
+  console.log("Server started on port " + port + " Lets go frontend side Kunal.");
+  console.log("Database connected successfully Kunal!");
+}
+
 // Add vehicle endpoint
 app.post("/addvehicle", upload.array("images", 10), async (req, res) => {
   try {
@@ -228,6 +326,7 @@ app.post("/bookvehicle", upload.single("document"), async (req, res) => {
     vehicle_number,
     name,
     mobile,
+    email,
     pickup_date,
     drop_date,
     pickup_time,
@@ -236,6 +335,35 @@ app.post("/bookvehicle", upload.single("document"), async (req, res) => {
     drop_location,
     total_cost,
   } = req.body;
+
+  // Check for booking conflicts
+  const conflictQuery = `
+    SELECT * FROM booking
+    WHERE vehicle_id = ?
+      AND (
+        (? < CONCAT(drop_date, 'T', drop_time))
+        AND
+        (? > CONCAT(pickup_date, 'T', pickup_time))
+      )
+  `;
+  const pickupDateTime = `${pickup_date}T${pickup_time}`;
+  const dropDateTime = `${drop_date}T${drop_time}`;
+  const [conflicts] = await db.query(conflictQuery, [
+    vehicle_id,
+    dropDateTime,
+    pickupDateTime,
+  ]);
+  console.log("Conflict check result:", conflicts);
+  if (conflicts.length > 0) {
+    // Find the latest drop time among conflicts
+    const latest = conflicts.reduce((max, b) => {
+      const end = new Date(`${b.drop_date}T${b.drop_time}`);
+      return end > max ? end : max;
+    }, new Date(`${conflicts[0].drop_date}T${conflicts[0].drop_time}`));
+    return res.status(409).json({
+      message: `This vehicle is already booked for the selected time range. Book after ${latest.toLocaleString()}.`
+    });
+  }
 
   const document = req.file ? req.file.filename : "";
 
@@ -263,6 +391,29 @@ app.post("/bookvehicle", upload.single("document"), async (req, res) => {
       total_cost,
       document,
     ]);
+
+    // Prepare receipt data
+    const receiptData = {
+      name,
+      mobile,
+      vehicle: vehicle_name,
+      pickup_date,
+      drop_date,
+      pickup_time,
+      drop_time,
+      total_cost
+    };
+
+    // Send booking email with PDF (only if email is provided)
+    if (email) {
+      await sendBookingEmail(email, receiptData)
+        .then(() => {
+          console.log("✅ Booking email sent to:", email);
+        })
+        .catch((error) => {
+          console.error("❌ Failed to send booking email:", error);
+        });
+    }
 
     res.send({ message: "Booking successful!" });
   } catch (err) {
@@ -332,7 +483,7 @@ app.get("/api/todays-bookings", async (req, res) => {
 
   try {
     const [results] = await db.query(
-      "SELECT * FROM bookings WHERE DATE(booking_datetime) = ?",
+      "SELECT * FROM booking WHERE DATE(booking_datetime) = ?",
       [today]
     );
     res.send(results);
@@ -358,8 +509,38 @@ app.get("/api/bookings", async (req, res) => {
 // Start the server
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost: ${PORT}`);
-  console.log(`Server started on port ${PORT} Lets go frontend side Kunal.`);
+  kunalBanner(PORT);
 });
+
+function kunalBanner(port) {
+  console.log("Server is running on http://localhost:" + port);
+  console.log("Server started on port " + port + " Lets go frontend side Kunal.");
+  console.log("Database connected successfully Kunal!");
+}
+
+app.get("/vehicle-bookings/:vehicle_id", async (req, res) => {
+  const { vehicle_id } = req.params;
+  const now = new Date().toISOString().slice(0, 16); // 'YYYY-MM-DDTHH:mm'
+  try {
+    const [results] = await db.query(
+      `SELECT pickup_date, pickup_time, drop_date, drop_time
+       FROM booking
+       WHERE vehicle_id = ?
+         AND (CONCAT(drop_date, 'T', drop_time) > ?)
+       ORDER BY pickup_date, pickup_time`,
+      [vehicle_id, now]
+    );
+    res.json(results);
+  } catch (err) {
+    console.error("Error fetching bookings:", err.message);
+    res.status(500).json({ error: "Failed to fetch bookings" });
+  }
+});
+
+const originalLog = console.log;
+console.log = function (...args) {
+  originalLog("k2:", ...args);
+};
+
 
 

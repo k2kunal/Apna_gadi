@@ -1,3 +1,8 @@
+NOTE : TO SEE THE COMPLETET TABLE DECRESE THE SCREEN SIZE 
+
+
+
+
 
 | Type | Name                  | Company                  | Model      | Battery Capacity | Number     | Rent Amount (₹/hr) |
 | ---- | --------------------- | ------------------------ | ---------- | ---------------- | ---------- | ------------------ |
