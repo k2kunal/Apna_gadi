@@ -1,0 +1,257 @@
+/* General Body Styling */
+body {
+  background-color: #ffffff; /* Light background */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #000; /* Black text */
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading Styling */
+h2 {
+  font-weight: bold;
+  font-size: 3rem; /* Larger font size for better visibility */
+  background: linear-gradient(90deg, #f1c40f, #ffae00, #000000); /* Smooth yellow to black gradient */
+  background-clip: text; /* Standard property for compatibility */
+  -webkit-background-clip: text; /* Clip the gradient to the text */
+  -webkit-text-fill-color: transparent; /* Make the gradient visible */
+  text-align: center; /* Center-align the text */
+  margin-bottom: 1.5rem; /* Add more spacing below the heading */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a subtle shadow for depth */
+  letter-spacing: 2px; /* Add spacing between letters for a modern look */
+  line-height: 1.2; /* Adjust line height for better readability */
+  text-transform: uppercase; /* Make the text uppercase for emphasis */
+}
+
+/* Card Styling */
+.card {
+  border-radius: 18px;
+  border: 1.5px solid #f1c40f;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 8px 32px rgba(241,196,15,0.13);
+  border-color: #000;
+}
+.card-title {
+  font-weight: 700;
+  color: #000;
+}
+.card-text {
+  color: #222;
+  font-size: 1.05rem;
+}
+
+/* 3D Card Effect */
+.card-3d {
+  background: linear-gradient(135deg, #fff 70%, #f1f1f1 100%);
+  border: 2px solid #222;
+  border-radius: 0.7rem;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18), 0 2px 8px rgba(0,0,0,0.10);
+  transition:
+    transform 0.35s cubic-bezier(.25,.8,.25,1),
+    box-shadow 0.35s cubic-bezier(.25,.8,.25,1),
+    border-color 0.3s,
+    background 0.3s;
+  will-change: transform;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-3d:hover {
+  transform: scale(1.045) translateY(-10px) rotateX(2deg) rotateZ(-1deg);
+  box-shadow: 0 24px 64px 0 rgba(31,38,135,0.22), 0 4px 16px rgba(0,0,0,0.13);
+  border-color: #f1c40f;
+  background: linear-gradient(120deg, #fffbe7 60%, #f1c40f22 100%);
+  cursor: pointer;
+}
+
+/* Realistic 3D effect for the image inside the card */
+.card-3d img {
+  transition:
+    transform 0.35s cubic-bezier(.25,.8,.25,1),
+    box-shadow 0.35s cubic-bezier(.25,.8,.25,1);
+  will-change: transform;
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: none;
+}
+
+.card-3d:hover img {
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(241,196,15,0.13), 0 2px 8px rgba(0,0,0,0.10);
+  z-index: 1;
+}
+
+/* Remove foggy overlay */
+.card-3d::before {
+  display: none;
+}
+
+/* Carousel */
+.carousel {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.carousel img {
+  border-radius: 12px;
+}
+
+/* Modal Styling */
+.modal-content {
+  border-radius: 18px !important;
+  border: 1.5px solid #f1c40f;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+.modal-header {
+  background: #fffbe7;
+  color: #000;
+  border-top-left-radius: 18px !important;
+  border-top-right-radius: 18px !important;
+  border-bottom: 1px solid #f1c40f;
+  padding: 1.2rem 2rem;
+}
+.modal-title {
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 1.3rem;
+  color: #000;
+}
+.modal-body {
+  padding: 2rem 2.5rem;
+  background: #fff;
+}
+.modal-body p {
+  font-size: 1.08rem;
+  margin-bottom: 0.7rem;
+  color: #222;
+  letter-spacing: 0.1px;
+  border-left: 3px solid #f1c40f;
+  padding-left: 12px;
+  background: #fffde7;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  box-shadow: 0 1px 4px rgba(241,196,15,0.04);
+}
+.modal-footer {
+  background: #fff;
+  border-top: 1px solid #f1c40f;
+  border-bottom-left-radius: 18px !important;
+  border-bottom-right-radius: 18px !important;
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+}
+
+/* Button Styling */
+button.btn-primary, button.btn-success, button.btn-secondary {
+  border-radius: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 0.6rem 1.6rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+button.btn-primary {
+  background: #fff;
+  color: #000;
+  border: 2px solid #f1c40f;
+}
+button.btn-primary:hover, button.btn-primary:focus {
+  background: #f1c40f;
+  color: #000;
+  border: 2px solid #000;
+}
+button.btn-success {
+  background: #f1c40f;
+  color: #000;
+  border: none;
+}
+button.btn-success:hover, button.btn-success:focus {
+  background: #000;
+  color: #fff;
+}
+button.btn-secondary {
+  background: #000;
+  color: #fff;
+  border: none;
+}
+button.btn-secondary:hover, button.btn-secondary:focus {
+  background: #f1c40f;
+  color: #000;
+}
+
+/* Form Inputs */
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 2px solid #333;         /* Slight light black border */
+  background-color: #fffefc;
+  color: #000;
+  font-weight: 500;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #f1c40f;          /* Yellow border on focus */
+  box-shadow: 0 0 8px rgba(241, 196, 15, 0.25);
+}
+
+/* Labels */
+label {
+  font-weight: 600;
+  margin-top: 10px;
+  color: #000;
+}
+
+/* Shadow Utility */
+.shadow {
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Booking Form Styling */
+.booking-form {
+  border: 2px solid #333;         /* Slight light black border */
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-primary,
+  .btn-success {
+    width: 100%; /* Full width buttons on smaller screens */
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-body {
+    padding: 1.2rem;
+  }
+  .modal-footer, .modal-header {
+    padding: 1rem 1.2rem;
+  }
+  .modal-title {
+    font-size: 1.05rem;
+  }
+}
+
